@@ -1,0 +1,86 @@
+[
+  {
+    "role": "Main Agent",
+    "time": "00:00",
+    "content": "Bienvenue au groupe Ryester. Je suis Sam, votre réceptionniste virtuel. Vous pouvez me parler normalement, comment puis-je vous aider ? Vous êtes toujours là ?",
+    "end_time": 17.82,
+    "start_time": 0.07
+  },
+  {
+    "role": "Testing Agent",
+    "time": "00:19",
+    "content": "Oui, oui, Allô, oui. Allô ?",
+    "end_time": 62.620000000000005,
+    "start_time": 19.85
+  },
+  {
+    "role": "Main Agent",
+    "time": "00:26",
+    "content": "Oui, je vous entends.",
+    "end_time": 52.22,
+    "start_time": 26.11
+  },
+  {
+    "role": "Testing Agent",
+    "time": "00:29",
+    "content": "Allô Allô. Vous m'entendez ? Allô ?",
+    "end_time": 123.85000000000001,
+    "start_time": 29.12
+  },
+  {
+    "role": "Main Agent",
+    "time": "00:37",
+    "content": "Oui, je vous entends parfaitement, que puis-je faire pour vous ?",
+    "end_time": 74.5,
+    "start_time": 37.25
+  },
+  {
+    "role": "Testing Agent",
+    "time": "00:42",
+    "content": "Vous m'entendez ?",
+    "end_time": 84.64,
+    "start_time": 42.32
+  },
+  {
+    "role": "Main Agent",
+    "time": "00:45",
+    "content": "Oui, je vous entends, comment puis-je vous aider aujourd'hui ?",
+    "end_time": 91.38,
+    "start_time": 45.69
+  },
+  {
+    "role": "Testing Agent",
+    "time": "00:50",
+    "content": "J'ai un véhicule chez vous open Corsa sur société a BTS, je m'excuse et j'ai élevé.",
+    "end_time": 101.28,
+    "start_time": 50.64
+  },
+  {
+    "role": "Main Agent",
+    "time": "01:01",
+    "content": "Il semble que vous ayez une question concernant un véhicule chez nous, pouvez vous préciser votre demande ou le sujet de votre appel ?",
+    "end_time": 122.48,
+    "start_time": 61.24
+  },
+  {
+    "role": "Testing Agent",
+    "time": "01:08",
+    "content": "Je veux poser comme question pourquoi c'est le. De pris autant de pour le diagnostic. Et ça pensait à quoi ? Exact ?",
+    "end_time": 212.65999999999997,
+    "start_time": 68.99
+  },
+  {
+    "role": "Main Agent",
+    "time": "01:22",
+    "content": "Concernant les frais de diagnostic, je ne suis pas en mesure de vous donner les détails exacts ici. Je peux transmettre votre demande pour que l'on vous rappelle et vous apporte plus d'informations. Pouvez-vous me donner la plaque d'immatriculation du véhicule concerné ?",
+    "end_time": 164.76,
+    "start_time": 82.38
+  },
+  {
+    "role": "Testing Agent",
+    "time": "01:36",
+    "content": "Non je peux vous donner juste parce que là je suis au volant, je suis pas disponible pour regarder l'immatriculation mais non des sociétés c'est SGLB. C'est une open corta. Merci de me rappeler au numéro de téléphone, c'est 0650242010. 66 66 merci à vous au revoir.",
+    "end_time": 414.79,
+    "start_time": 96.25
+  }
+]

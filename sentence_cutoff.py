@@ -9,27 +9,24 @@ from pydantic import BaseModel
 
 client = Client()
 
-with open("data/transcript.json", 'rb') as file:
-    transcript = json.load(file)
+def load_case(id: int):
+    with open(f'data/case-{id}/transcript.json', 'rb') as file:
+        transcript = json.load(file)
+    
+    audio = client.files.upload(file=f'data/case-{id}/audio.wav')
 
-with open("data/audio.wav", 'rb') as file:
-    audio_bytes = file.read()
-
-audio_part = types.Part.from_bytes(
-    data=audio_bytes,
-    mime_type="audio/wav"
-)
-
+    return transcript, audio
 
 class SingleCutoffFoundResponse(BaseModel):
     found: Literal["true"]
     timestamp: str
 
+
 class SingleCutoffNotFoundResponse(BaseModel):
     found: Literal["false"]
 
 
-def find_cutoff_single(audio_bytes: bytes):
+def find_cutoff_single(audio: types.File):
 
     instructions = '''
     You are a quality assurance agent working for a telephone company.
@@ -43,26 +40,28 @@ def find_cutoff_single(audio_bytes: bytes):
     We are only interested in timestamps where they are cut off by a technical issue, not when they are interrupted by the other speaker.
     '''
 
-    audio_part = types.Part.from_bytes(
-        data=audio_bytes,
-        mime_type="audio/wav"
-    )
     response = client.models.generate_content(
         model="gemini-2.5-flash",
-        contents=[instructions, audio_part],
+        contents=[instructions, audio],
         config={
             'response_mime_type': 'application/json',
             'response_schema': SingleCutoffFoundResponse | SingleCutoffNotFoundResponse,
         }
     )
 
-    return response.text
+    assert response.text is not None
+    # Parse and validate the response as JSON using Pydantic
+    response_json = json.loads(response.text)
+    if response_json.get("found") == "true":
+        return SingleCutoffFoundResponse(**response_json)
+    else:
+        return SingleCutoffNotFoundResponse(**response_json)
 
 
 class MultipleCutoffResponse(BaseModel):
     timestamp: str
 
-def find_cutoff_multiple(audio_bytes: bytes):
+def find_cutoff_multiple(audio: types.File):
     instructions = '''
     You are a quality assurance agent working for a telephone company.
     Occasionally, due to technical issues, the connection may be temporarily lost.
@@ -74,28 +73,39 @@ def find_cutoff_multiple(audio_bytes: bytes):
     We are only interested in timestamps where they are cut off by a technical issue, not when they are interrupted by the other speaker.
     '''
 
-    audio_part = types.Part.from_bytes(
-        data=audio_bytes,
-        mime_type="audio/wav"
-    )
-
     response = client.models.generate_content(
         model="gemini-2.5-flash",
-        contents=[instructions, audio_part],
+        contents=[instructions, audio],
         config={
             'response_mime_type': 'application/json',
             'response_schema': list[MultipleCutoffResponse],
         }
     )
 
-    return response.text
+    assert response.text is not None
+    # Parse and validate the response as JSON using Pydantic
+    response_json = json.loads(response.text)
+    return [MultipleCutoffResponse(**item) for item in response_json]
 
 
 if __name__ == "__main__":
-    print("Single Cutoff:")
-    print(find_cutoff_single(audio_bytes))
-    print()
+    for case_id in range(1, 6):
+        print(f"=== Case {case_id} ===")
+        transcript, audio = load_case(case_id)
 
-    print("Multiple Cutoff:")
-    print(find_cutoff_multiple(audio_bytes))
-    print()
+        print("Single Cutoff:")
+        single_result = find_cutoff_single(audio)
+        if hasattr(single_result, 'found') and single_result.found == "true":
+            print(f"  Cutoff found at: {single_result.timestamp}")
+        else:
+            print("  No cutoff found.")
+        print()
+
+        print("Multiple Cutoff:")
+        multiple_results = find_cutoff_multiple(audio)
+        if multiple_results:
+            for idx, cutoff in enumerate(multiple_results, 1):
+                print(f"  {idx}. {cutoff.timestamp}")
+        else:
+            print("  None found.")
+        print()
