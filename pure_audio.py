@@ -9,13 +9,8 @@ from pydantic import BaseModel
 
 client = Client()
 
-def load_case(id: int):
-    with open(f'data/case-{id}/transcript.json', 'rb') as file:
-        transcript = json.load(file)
-    
-    audio = client.files.upload(file=f'data/case-{id}/audio.wav')
-
-    return transcript, audio
+def load_audio(id: int):
+    return client.files.upload(file=f'data/case-{id}/audio.wav')
 
 class SingleCutoffFoundResponse(BaseModel):
     found: Literal["true"]
@@ -91,7 +86,7 @@ def find_cutoff_multiple(audio: types.File):
 if __name__ == "__main__":
     for case_id in range(1, 6):
         print(f"=== Case {case_id} ===")
-        transcript, audio = load_case(case_id)
+        audio = load_audio(case_id)
 
         print("Single Cutoff:")
         single_result = find_cutoff_single(audio)
