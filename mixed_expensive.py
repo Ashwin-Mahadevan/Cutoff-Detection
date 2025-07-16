@@ -35,19 +35,20 @@ def fmt_time(t: float) -> str:
     return f"{minutes}:{seconds:02d}"
 
 def format_transcript(transcript: List[TranscriptEntry]):
-    lines = [f"{fmt_time(entry.start_time)}-{fmt_time(entry.end_time)} {entry.role}: {entry.content}" for entry in transcript]
+    lines = [f"{fmt_time(entry.start_time)}-{fmt_time(entry.end_time)} {'Customer' if entry.role == 'Main Agent' else 'Testing Agent'}: {entry.content}" for entry in transcript]
     return "\n".join(lines)
 
 def find_cutoffs(audio: types.File, transcript_text: str):
     instructions = '''
     You are a quality assurance agent working for a telephone company.
     Occasionally, due to technical issues, the connection may be temporarily lost.
-    You will be given a recording of the phone call and the full transcript with timestamps.
-    Your job is to determine if and when the connection was lost due to a technical issue (a cutoff).
-    Do not include timestamps where a speaker simply finishes speaking.
-    Do not include timestamps where one speaker interrupts the other.
-    We are only interested in timestamps where they are cut off by a technical issue, not when they are interrupted by the other speaker.
-    Return a list of timestamps where the connection was lost due to a technical issue.
+    Our testing agent is calling a customer to test the phone system to see if it is working properly.
+    You will be given a recording of that phone call and the full transcript with timestamps.
+    Your job is to determine if and when the customer's connection was lost due to a technical issue (a cutoff).
+    Do not include timestamps where the customer simply finishes speaking.
+    Do not include timestamps where the testing agent interrupts the customer.
+    Do not include timestamps where the testing agent is cut off: we only care about the customer's connection.
+    Return a list of timestamps where the customer's connection was lost due to a technical issue.
     If there aren't any, return an empty list.
     '''
 
